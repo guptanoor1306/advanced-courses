@@ -4,7 +4,7 @@ import requests
 # API Configuration
 API_URL = "https://catalog.prod.learnapp.com/catalog/discover?type=advance-courses"
 API_KEY = "ZmtFWfKS9aXK3NZQ2dY8Fbd6KqjF8PDu"
-AUTH_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTUxNzE5MjcsImV4cCI6MTcxNTc3NjcyNywiYXVkIjoibGVhcm5hcHAiLCJpc3MiOiJoeWRyYTowLjAuMSJ9.Vtbt-nJy3XGDOQW-AManV_Kx6rHjFDOZPmJ3ENyArlM"
+AUTH_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJjYTMyN2VhMC1mYTY4LTQ5NDItOWE2OC1mYjUxM2RhMTE1OWQiLCJpcCI6IjQ5LjI0OS42OS4yMiwgMTMwLjE3Ni4xODguMjQ2IiwiY291bnRyeSI6IklOIiwiaWF0IjoxNzE1MjUxNTMxLCJleHAiOjE3MTU4NTYzMzEsImF1ZCI6ImxlYXJuYXBwIiwiaXNzIjoiaHlkcmE6MC4wLjEifQ.rDyqyMquTPy4Dr3FVJpD7NxE4DxLh3CkmRERGir-xlU"
 
 def fetch_courses():
     headers = {
