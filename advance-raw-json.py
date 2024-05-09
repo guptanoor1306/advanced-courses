@@ -25,7 +25,15 @@ def display_course_details(course):
     st.write(f"**Lesson Count:** {course['lessonCount']}")
     st.write(f"**Language:** {', '.join(course['language'])}")
     st.write(f"**Release Date:** {course['releaseDate']}")
-    st.image(course['assets']['card-238x165-jpg']['url'], caption=course['assets']['card-238x165-jpg']['alt'])
+
+    # Attempt to display the image with error handling
+    try:
+        image_url = course['assets']['card-238x165-jpg']['url']
+        if not image_url.startswith('http'):
+            image_url = f"https://example.com/{image_url}"  # Adjust base URL accordingly
+        st.image(image_url, caption=course['assets']['card-238x165-jpg']['alt'])
+    except Exception as e:
+        st.error(f"Failed to load image: {e}")
 
 def main():
     st.title("Advanced Courses Catalog")
