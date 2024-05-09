@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-import json
 
 # API Configuration
 API_URL = "https://catalog.prod.learnapp.com/catalog/discover?type=advance-courses"
@@ -14,30 +13,39 @@ def fetch_courses():
     }
     response = requests.get(API_URL, headers=headers)
     if response.status_code == 200:
-        data = response.json()
-        return data.get('advCourses', [])  # Adjusted to match the new JSON structure
+        return response.json().get('advCourses', [])
     else:
         st.error(f"Failed to fetch courses. Status code: {response.status_code}")
         return []
 
+def display_course_details(course):
+    st.subheader(course['title'])
+    st.write(f"**Summary:** {course.get('summary', 'No summary provided')}")
+    st.write(f"**Difficulty:** {course['difficulty']}")
+    st.write(f"**Lesson Count:** {course['lessonCount']}")
+    st.write(f"**Language:** {', '.join(course['language'])}")
+    st.write(f"**Release Date:** {course['releaseDate']}")
+    st.image(course['assets']['card-238x165-jpg']['url'], caption=course['assets']['card-238x165-jpg']['alt'])
+
 def main():
     st.title("Advanced Courses Catalog")
+    courses_data = fetch_courses()
 
-    # Fetch courses data
-    adv_courses_data = fetch_courses()
-
-    if not adv_courses_data:
+    if not courses_data:
         st.write("No advanced courses data found.")
-    else:
-        # Flatten the list of courses across all subjects
-        courses = [item for subject in adv_courses_data for item in subject['items']]
-        course_titles = [course['title'] for course in courses if 'title' in course]
-        selected_courses = st.multiselect('Select Courses', options=course_titles)
+        return
 
-        # Show selected course details in raw JSON format
-        if selected_courses:
-            selected_course_data = [course for course in courses if course['title'] in selected_courses]
-            st.json(selected_course_data)  # This will display the raw JSON data in a nicely formatted way
+    subjects = list(set(subject['subject'] for subject in courses_data if 'subject' in subject))
+    selected_subject = st.selectbox('Select Subject', subjects)
+
+    filtered_courses = next((sub['items'] for sub in courses_data if sub['subject'] == selected_subject), [])
+    course_titles = [course['title'] for course in filtered_courses]
+    selected_course_title = st.selectbox('Select Course', course_titles)
+
+    if selected_course_title:
+        selected_course = next((course for course in filtered_courses if course['title'] == selected_course_title), None)
+        if selected_course:
+            display_course_details(selected_course)
 
 if __name__ == "__main__":
     main()
