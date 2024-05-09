@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import json
 
 # API Configuration
 API_URL = "https://catalog.prod.learnapp.com/catalog/discover?type=advance-courses"
