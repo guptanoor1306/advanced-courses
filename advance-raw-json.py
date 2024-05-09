@@ -8,30 +8,29 @@ API_KEY = "ZmtFWfKS9aXK3NZQ2dY8Fbd6KqjF8PDu"
 AUTH_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJjYTMyN2VhMC1mYTY4LTQ5NDItOWE2OC1mYjUxM2RhMTE1OWQiLCJpcCI6IjQ5LjI0OS42OS4yMiwgMTMwLjE3Ni4xODguMjQ2IiwiY291bnRyeSI6IklOIiwiaWF0IjoxNzE1MjUxNTMxLCJleHAiOjE3MTU4NTYzMzEsImF1ZCI6ImxlYXJuYXBwIiwiaXNzIjoiaHlkcmE6MC4wLjEifQ.rDyqyMquTPy4Dr3FVJpD7NxE4DxLh3CkmRERGir-xlU"
 
 def fetch_courses():
-    """Fetches courses from the API and handles exceptions."""
     headers = {
         "X-Api-Key": API_KEY,
         "Authorization": AUTH_TOKEN
     }
-    try:
-        response = requests.get(API_URL, headers=headers)
-        response.raise_for_status()  # Raises stored HTTPError, if one occurred.
-        return response.json()
-    except requests.RequestException as e:
-        st.error(f"Failed to fetch courses: {e}")
-        return {}
+    response = requests.get(API_URL, headers=headers)
+    if response.status_code == 200:
+        data = response.json()
+        return data.get('advCourses', [])  # Adjusted to match the new JSON structure
+    else:
+        st.error(f"Failed to fetch courses. Status code: {response.status_code}")
+        return []
 
 def main():
     st.title("Advanced Courses Catalog")
 
     # Fetch courses data
-    courses_data = fetch_courses()
-    courses = courses_data.get('courses', [])
+    adv_courses_data = fetch_courses()
 
-    if not courses:
-        st.write("No courses data found.")
+    if not adv_courses_data:
+        st.write("No advanced courses data found.")
     else:
-        # Creating a list of course titles for the dropdown menu
+        # Flatten the list of courses across all subjects
+        courses = [item for subject in adv_courses_data for item in subject['items']]
         course_titles = [course['title'] for course in courses if 'title' in course]
         selected_courses = st.multiselect('Select Courses', options=course_titles)
 
