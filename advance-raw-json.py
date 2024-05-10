@@ -20,8 +20,9 @@ def fetch_courses():
 
 def display_course_details(course):
     st.subheader(course['title'])
+    st.write(f"**Canonical Title:** {course['canonicalTitle']}")
     st.write(f"**Summary:** {course.get('summary', 'No summary provided')}")
-    st.write(f"**Difficulty:** {course['difficulty']}")
+    st.write(f"**Total Playback Time:** {course['totalPlaybackTime']} minutes")
     st.write(f"**Lesson Count:** {course['lessonCount']}")
     st.write(f"**Language:** {', '.join(course['language'])}")
     st.write(f"**Release Date:** {course['releaseDate']}")
